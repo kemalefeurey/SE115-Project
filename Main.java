@@ -85,15 +85,82 @@ public class Main {
     }
 
     public static int bestDayOfMonth(int month) {
-        return 1234;
+        if(month<MONTHS && month>=0){
+            int[] sumDay=new int[DAYS];
+            for (int i = 0; i <DAYS; i++) {
+                for (int j = 0; j < COMMS; j++) {
+                    sumDay[i]+=data[month][i][j];
+                }
+            }
+            int bestDay=0;
+            int maxDay=0;
+            for (int i = 0; i < sumDay.length; i++) {
+                if (maxDay<sumDay[i]) {
+                    maxDay=sumDay[i];
+                    bestDay=i;
+                }
+            }
+            return bestDay;
+        }else{
+            return -1;
+        }
     }
 
     public static String bestMonthForCommodity(String comm) {
-        return "DUMMY";
+        int c=-1;
+        for(int i=0;i<commodities.length;i++){
+            if(commodities[i].equals(comm)){
+                c=i;
+            }
+        }
+        if (c==-1){
+            return "INVALID_COMMODITY";
+        }else{
+            int[] sumMonth=new int[MONTHS];
+            int bestMonth=7;
+            int max=sumMonth[7];
+            // Why specifically 7?   My Birthday: ??/08/2007,months[7]=August
+            for (int i = 0; i < MONTHS; i++) {
+                for (int j = 0; j <DAYS ; j++) {
+                    sumMonth[i]+=data[i][j][c];
+                }
+            }
+            for (int i = 0; i < sumMonth.length; i++) {
+                if(sumMonth[i]>max){
+                    max=sumMonth[i];
+                    bestMonth=i;
+                }
+            }
+            return months[bestMonth];
+        }
     }
 
     public static int consecutiveLossDays(String comm) {
-        return 1234;
+        int c=-1;
+        for(int i=0;i<commodities.length;i++){
+            if(commodities[i].equals(comm)){
+                c=i;
+            }
+        }
+        if (c==-1){
+            return -1;
+        }else{
+            int streak=0;
+            int maxStreak=0;
+            for (int i = 0; i < MONTHS; i++) {
+                for (int j = 0; j < DAYS; j++) {
+                    if(data[i][j][c]<0){
+                        streak++;
+                        if(maxStreak<streak){
+                            maxStreak=streak;
+                        }
+                    }else{
+                        streak=0;
+                    }
+                }
+            }
+            return maxStreak;
+        }
     }
 
     public static int daysAboveThreshold(String comm, int threshold) {
