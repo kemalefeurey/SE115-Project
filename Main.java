@@ -2,6 +2,9 @@
 import java.io.*;
 import java.util.*;
 import java.lang.Math;
+import java.util.Scanner;
+import java.nio.file.Paths;
+import java.io.IOException;
 
 public class Main {
     static final int MONTHS = 12;
@@ -15,6 +18,28 @@ public class Main {
 
     // ======== REQUIRED METHOD LOAD DATA (Students fill this) ========
     public static void loadData() {
+        try{
+            for (int i=0;i<MONTHS;i++) {
+                Scanner sc=new Scanner(Paths.get(months[i]+".txt"));
+                sc.nextLine();
+                while(sc.hasNextLine()){
+                    String line=sc.nextLine();
+                    String[] lineArray=line.split(",");
+                    int day = Integer.parseInt(lineArray[0])-1;
+                    String comm = lineArray[1];
+                    int profit = Integer.parseInt(lineArray[2]);
+                    int c=-1;
+                    for (int j = 0; j < COMMS; j++) {
+                        if (commodities[j].equals(comm)) {
+                            c = j;
+                        }
+                    }
+                    data[i][day][c] = profit;
+                }
+                sc.close();
+            }
+        } catch (IOException e){
+        }
     }
 
     // ======== 10 REQUIRED METHODS (Students fill these) ========
@@ -118,9 +143,8 @@ public class Main {
             return "INVALID_COMMODITY";
         }else{
             int[] sumMonth=new int[MONTHS];
-            int bestMonth=7;
-            int max=sumMonth[7];
-            // Why specifically 7?   My Birthday: ??/08/2007,months[7]=August
+            int bestMonth=0;
+            int max=sumMonth[0];
             for (int i = 0; i < MONTHS; i++) {
                 for (int j = 0; j <DAYS ; j++) {
                     sumMonth[i]+=data[i][j][c];
