@@ -1,6 +1,7 @@
 // Main.java — Students version
 import java.io.*;
 import java.util.*;
+import java.lang.Math;
 
 public class Main {
     static final int MONTHS = 12;
@@ -164,15 +165,79 @@ public class Main {
     }
 
     public static int daysAboveThreshold(String comm, int threshold) {
-        return 1234;
+        int c=-1;
+        int above=0;
+        for(int i=0;i<commodities.length;i++){
+            if(commodities[i].equals(comm)){
+                c=i;
+            }
+        }
+        if (c==-1){
+            return -1;
+        }else{
+            for(int i=0;i<MONTHS;i++){
+                for (int j=0;j<DAYS;j++) {
+                    if(data[i][j][c]>threshold){
+                        above++;
+                    }
+                }
+            }
+            return above;
+        }
     }
 
     public static int biggestDailySwing(int month) {
-        return 1234;
+        if(month<MONTHS && 0<=month){
+            int maxSwing=0;
+            int[] sumProfit=new int[DAYS];
+            for (int i = 0; i <DAYS; i++) {
+                for (int j = 0; j < COMMS; j++) {
+                    sumProfit[i]+=data[month][i][j];
+                }
+            }
+            for(int j=0;(j<DAYS-1);j++){
+                if(Math.abs(sumProfit[j]-sumProfit[j+1])>maxSwing){
+                    maxSwing=Math.abs(sumProfit[j]-sumProfit[j+1]);
+                }
+            }
+            return maxSwing;
+        }else{
+            return -99999;
+        }
     }
 
     public static String compareTwoCommodities(String c1, String c2) {
-        return "DUMMY is better by 1234";
+        int c1int=-1;
+        int c2int=-1;
+        for(int i=0;i<commodities.length;i++){
+            if(commodities[i].equals(c1)){
+                c1int=i;
+            }
+        }
+        for(int i=0;i<commodities.length;i++){
+            if(commodities[i].equals(c2)){
+                c2int=i;
+            }
+        }
+        if(c1int==-1 || c2int==-1){
+            return "INVALID_COMMODITY";
+        }else{
+            int c1SumYear=0;
+            int c2SumYear=0;
+            for (int i = 0; i <MONTHS; i++) {
+                for (int j=0;j<DAYS;j++){
+                    c1SumYear+=data[i][j][c1int];
+                    c2SumYear+=data[i][j][c2int];
+                }
+            }
+            if(c1SumYear<c2SumYear){
+                return c2+" is better by "+(c2SumYear-c1SumYear);
+            }else if(c1SumYear>c2SumYear){
+                return c1+" is better by "+(c1SumYear-c2SumYear);
+            }else{
+                return"Equal";
+            }
+        }
     }
 
     public static String bestWeekOfMonth(int month) {
