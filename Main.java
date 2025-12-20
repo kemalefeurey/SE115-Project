@@ -20,25 +20,33 @@ public class Main {
     public static void loadData() {
         try{
             for (int i=0;i<MONTHS;i++) {
-                Scanner sc=new Scanner(Paths.get(months[i]+".txt"));
-                sc.nextLine();
+                Scanner sc=new Scanner(Paths.get("Data_Files/"+months[i]+".txt"));
+
                 while(sc.hasNextLine()){
                     String line=sc.nextLine();
+                    if(line.substring(0,3).equals("Day") || line.trim().equals("")){
+                        continue;
+                    }
                     String[] lineArray=line.split(",");
                     int day = Integer.parseInt(lineArray[0])-1;
-                    String comm = lineArray[1];
                     int profit = Integer.parseInt(lineArray[2]);
-                    int c=-1;
+                    String comm = lineArray[1];
+
+                    int c=0;
                     for (int j = 0; j < COMMS; j++) {
-                        if (commodities[j].equals(comm)) {
+                        if (commodities[j].equals(lineArray[1].trim())) {
                             c = j;
+                            break;
                         }
                     }
                     data[i][day][c] = profit;
                 }
                 sc.close();
             }
-        } catch (IOException e){
+        } catch (FileNotFoundException e){
+            System.err.println("ERROR File Not Found");
+        }catch(IOException e){
+            System.err.println("ERROR IOEXCEPTION");
         }
     }
 
@@ -48,13 +56,10 @@ public class Main {
     public static String mostProfitableCommodityInMonth(int month) {
         if(month<MONTHS && 0<=month){
             int[] sumCom=new int[5];
-
             for (int i = 0; i <DAYS; i++) {
-                sumCom[0] += data[month][i][0];
-                sumCom[1] += data[month][i][1];
-                sumCom[2] += data[month][i][2];
-                sumCom[3] += data[month][i][3];
-                sumCom[4] += data[month][i][4];
+                for (int j = 0; j < COMMS; j++) {
+                    sumCom[j] += data[month][i][j];
+                }
             }
             int maxCom=0;
             int k=-1;
@@ -64,13 +69,14 @@ public class Main {
                     k=i;
                 }
             }
-            return "Most Profitable Commodity In Month is: "+commodities[k];
+            return commodities[k]+" "+sumCom[k];
         }else{
             return "INVALID_MONTH";
         }
     }
 
     public static int totalProfitOnDay(int month, int day) {
+        day--;
         if((month<MONTHS && 0<=month) && (day<DAYS && 0<=day)){
             int sumDay=0;
             for(int i=0;i<COMMS;i++){
@@ -83,6 +89,8 @@ public class Main {
     }
 
     public static int commodityProfitInRange(String commodity, int from, int to) {
+        from--;
+        to--;
         int sumRange=0;
         if((from<DAYS && from>=0) && (to<DAYS && to>=0)){
             if(from<=to){
@@ -123,7 +131,7 @@ public class Main {
             for (int i = 0; i < sumDay.length; i++) {
                 if (maxDay<sumDay[i]) {
                     maxDay=sumDay[i];
-                    bestDay=i;
+                    bestDay=i+1;
                 }
             }
             return bestDay;
@@ -300,6 +308,5 @@ public class Main {
 
     public static void main(String[] args) {
         loadData();
-        System.out.println("Data loaded – ready for queries");
     }
 }
