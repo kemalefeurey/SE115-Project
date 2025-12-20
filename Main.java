@@ -241,7 +241,37 @@ public class Main {
     }
 
     public static String bestWeekOfMonth(int month) {
-        return "DUMMY";
+        if(month<MONTHS && 0<=month){
+            int[] sumDay=new int[DAYS];
+            for (int i = 0; i <DAYS; i++) {
+                for (int j = 0; j < COMMS; j++) {
+                    sumDay[i]+=data[month][i][j];
+                }
+            }
+            int[] sumWeek=new int[4];
+            for(int i=0;i<DAYS;i++){
+                if(i>=0 && i<=6){
+                    sumWeek[0]+=sumDay[i];
+                } else if (i>=7 && i<=13) {
+                    sumWeek[1]+=sumDay[i];
+                } else if (i>=14 && i<=20) {
+                    sumWeek[2]+=sumDay[i];
+                }else{
+                    sumWeek[3]+=sumDay[i];
+                }
+            }
+            int bestWeek=sumWeek[0];
+            int bestWeekNumber=0;
+            for (int i=0;i<sumWeek.length;i++) {
+                if(sumWeek[i]>bestWeek){
+                    bestWeekNumber=i;
+                    bestWeek=sumWeek[i];
+                }
+            }
+            return "Week "+(bestWeekNumber+1);
+        }else{
+            return  "INVALID_MONTH";
+        }
     }
 
     public static void main(String[] args) {
